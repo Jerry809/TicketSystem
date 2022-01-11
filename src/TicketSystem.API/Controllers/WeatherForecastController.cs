@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace TicketSystem.Controllers
+namespace TicketSystem.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]

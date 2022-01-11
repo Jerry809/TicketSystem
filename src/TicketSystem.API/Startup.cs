@@ -11,8 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using TicketSystem.API.Extensions;
 
-namespace TicketSystem
+namespace TicketSystem.API
 {
     public class Startup
     {
@@ -27,9 +28,7 @@ namespace TicketSystem
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerServices();
-            
             services.AddControllers();
-        
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,13 +37,8 @@ namespace TicketSystem
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                // use swagger
                 app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    var prefix = string.IsNullOrWhiteSpace(c.RoutePrefix) ? "." : "..";
-                    c.SwaggerEndpoint($"{prefix}/swagger/v1/swagger.json", "TicketSystem v1");
-                });
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TicketSystem.API v1"));
             }
 
             app.UseHttpsRedirection();

@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace TicketSystem
+namespace TicketSystem.API.Extensions
 {
     public static class SwaggerServicesExtension
     {
@@ -17,7 +14,7 @@ namespace TicketSystem
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TicketSystem", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TicketSystem.API", Version = "v1" });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Bearer schema (Example: 'Bearer asdfasdfasdf')",
