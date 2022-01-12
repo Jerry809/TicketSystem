@@ -23,5 +23,6 @@ namespace TicketSystem.Repository.Models
         public int? UpdateUserId { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? UpdateTime { get; set; }
+        public bool IsDisabled { get; set; }
     }
 }
