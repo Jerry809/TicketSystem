@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TicketSystem.Repository.Models
 {
-    [Keyless]
     [Table("User")]
     public partial class User
     {
+        [Key]
         public int Id { get; set; }
         [Required]
         [StringLength(20)]

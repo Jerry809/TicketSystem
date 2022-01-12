@@ -22,7 +22,7 @@ namespace TicketSystem.Repository.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<int> Create(Ticket ticket, CancellationToken cancellationToken = default)
+        public async Task<int> CreateAsync(Ticket ticket, CancellationToken cancellationToken = default)
         {
             await _dbContext.AddAsync(ticket, cancellationToken);
 
@@ -40,13 +40,13 @@ namespace TicketSystem.Repository.Repositories
             };
 
             await _dbContext.TicketHistories.AddAsync(ticketHistory, cancellationToken);
-            
+
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return ticket.Id;
         }
 
-        public async Task<int> Update(Ticket ticket, CancellationToken cancellationToken = default)
+        public async Task<int> UpdateAsync(Ticket ticket, CancellationToken cancellationToken = default)
         {
             var origin = _dbContext.Find<Ticket>(ticket.Id);
 
@@ -56,7 +56,7 @@ namespace TicketSystem.Repository.Repositories
             origin.Severity = ticket.Severity;
             origin.Status = ticket.Status;
             origin.AsigneeUserId = ticket.AsigneeUserId;
-            origin.UpdateTime = DateTime.Now;
+            origin.UpdateTime = ticket.UpdateTime;
             origin.UpdateUserId = ticket.UpdateUserId;
 
             _dbContext.Update(origin);
@@ -75,25 +75,30 @@ namespace TicketSystem.Repository.Repositories
             };
 
             await _dbContext.TicketHistories.AddAsync(ticketHistory, cancellationToken);
-            
+
             return await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Ticket>> GetTicketList(GetTicketListFilter filter, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Ticket>> GetTicketListAsync(GetTicketListFilter filter, CancellationToken cancellationToken = default)
         {
             Expression<Func<Ticket, bool>> predicate = x => true;
 
-            if (filter.Id > 0)
+            if (filter.Id.HasValue)
             {
-                predicate = predicate.And(x => x.Id == filter.Id);
+                predicate = predicate.And(x => x.Id == filter.Id.Value);
             }
 
-            if (filter.TicketType > 0)
+            if (filter.TicketType.HasValue)
             {
-                predicate = predicate.And(x => x.Type == filter.TicketType);
+                predicate = predicate.And(x => x.Type == filter.TicketType.Value);
             }
 
-            var ticketQueryable = _dbContext.Tickets.Where(predicate).OrderByDescending(x => 0);
+            if (filter.AsigneeUserId.HasValue)
+            {
+                predicate = predicate.And(x => x.AsigneeUserId == filter.AsigneeUserId.Value);
+            }
+            
+            var ticketQueryable = _dbContext.Tickets.Where(predicate).OrderByDescending(x => x.CreationTime);
 
             var orderByColumn = typeof(Ticket).GetProperties()
                 .FirstOrDefault(x => string.Equals(x.Name, filter.OrderBy, StringComparison.CurrentCultureIgnoreCase))?
@@ -105,18 +110,20 @@ namespace TicketSystem.Repository.Repositories
                 {
                     OrderType.AESC => ticketQueryable.ThenBy(orderByColumn),
                     OrderType.DESC => ticketQueryable.ThenByDescending(orderByColumn),
-                    _ => ticketQueryable
+                    _ => ticketQueryable.ThenByDescending(orderByColumn)
                 };
             }
 
-            return await ticketQueryable.ToListAsync(cancellationToken: cancellationToken);
+            return await ticketQueryable
+                .Include(x => x.Comment)
+                .ToListAsync(cancellationToken: cancellationToken);
         }
 
-        public async Task<Ticket> GetTicket(int ticketId, CancellationToken cancellationToken = default)
+        public async Task<Ticket> GetTicketAsync(int ticketId, CancellationToken cancellationToken = default)
         {
-            var ticket = await _dbContext.Tickets.FirstOrDefaultAsync(x => x.Id == ticketId, cancellationToken);
-
-            return ticket;
+            return await _dbContext.Tickets
+                .Include(x => x.Comment)
+                .FirstOrDefaultAsync(x => x.Id == ticketId, cancellationToken);
         }
     }
 }

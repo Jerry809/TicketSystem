@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TicketSystem.Repository.Models
 {
-    [Keyless]
     [Table("Ticket")]
     public partial class Ticket
     {
+        [Key]
         public int Id { get; set; }
         [Required]
         [StringLength(500)]
@@ -30,5 +30,8 @@ namespace TicketSystem.Repository.Models
         public int? UpdateUserId { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? UpdateTime { get; set; }
+
+        [InverseProperty("IdNavigation")]
+        public virtual Comment Comment { get; set; }
     }
 }

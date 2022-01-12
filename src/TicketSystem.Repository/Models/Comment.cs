@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TicketSystem.Repository.Models
 {
-    [Keyless]
     [Table("Comment")]
     public partial class Comment
     {
+        [Key]
         public int Id { get; set; }
         [Required]
         [Column(TypeName = "ntext")]
@@ -19,5 +19,10 @@ namespace TicketSystem.Repository.Models
         public int CreatorId { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime CreationTime { get; set; }
+        public int TicketId { get; set; }
+
+        [ForeignKey(nameof(Id))]
+        [InverseProperty(nameof(Ticket.Comment))]
+        public virtual Ticket IdNavigation { get; set; }
     }
 }

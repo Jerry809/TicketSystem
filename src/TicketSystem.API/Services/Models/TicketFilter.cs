@@ -1,8 +1,8 @@
 using TicketSystem.Infrastructure;
 
-namespace TicketSystem.Repository.Models.Filters
+namespace TicketSystem.API.Services.Models
 {
-    public class GetTicketListFilter
+    public class TicketFilter
     {
         public int? Id { get; set; }
         public int? TicketType { get; set; }

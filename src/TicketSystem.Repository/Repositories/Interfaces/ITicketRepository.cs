@@ -9,12 +9,12 @@ namespace TicketSystem.Repository.Repositories.Interfaces
 {
     public interface ITicketRepository
     {
-        Task<int> Create(Ticket ticket, CancellationToken cancellationToken = default);
+        Task<int> CreateAsync(Ticket ticket, CancellationToken cancellationToken = default);
 
-        Task<int> Update(Ticket ticket, CancellationToken cancellationToken = default);
+        Task<int> UpdateAsync(Ticket ticket, CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<Ticket>> GetTicketList(GetTicketListFilter filter, CancellationToken cancellationToken = default);
+        Task<IEnumerable<Ticket>> GetTicketListAsync(GetTicketListFilter filter, CancellationToken cancellationToken = default);
 
-        Task<Ticket> GetTicket(int ticketId, CancellationToken cancellationToken = default);
+        Task<Ticket> GetTicketAsync(int ticketId, CancellationToken cancellationToken = default);
     }
 }

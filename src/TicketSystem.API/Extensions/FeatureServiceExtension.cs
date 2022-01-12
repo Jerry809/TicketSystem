@@ -10,6 +10,7 @@ namespace TicketSystem.API.Extensions
         {
             services.AddScoped<ITicketService, TicketService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICommentService, CommentService>();
 
             return services;
         }

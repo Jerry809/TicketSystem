@@ -29,6 +29,7 @@ namespace TicketSystem.API
         {
             services.AddDatabaseServices(Configuration);
             services.AddRepositoryServices();
+            services.AddFeatureServices();
             services.AddSwaggerServices();
             services.AddControllers();
         }

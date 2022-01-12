@@ -9,6 +9,8 @@ namespace TicketSystem.API.Extensions
         public static IServiceCollection AddRepositoryServices(this IServiceCollection services)
         {
             services.AddScoped<ITicketRepository, TicketRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             return services;
         }
