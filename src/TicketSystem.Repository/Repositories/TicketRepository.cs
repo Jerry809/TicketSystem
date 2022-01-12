@@ -26,6 +26,21 @@ namespace TicketSystem.Repository.Repositories
         {
             await _dbContext.AddAsync(ticket, cancellationToken);
 
+            var ticketHistory = new TicketHistory
+            {
+                AsigneeUserId = ticket.AsigneeUserId,
+                CreationTime = ticket.CreationTime,
+                CreatorId = ticket.CreatorId,
+                Description = ticket.Description,
+                Priority = ticket.Priority,
+                Severity = ticket.Severity,
+                Status = ticket.Status,
+                Summary = ticket.Summary,
+                Type = ticket.Type,
+            };
+
+            await _dbContext.TicketHistories.AddAsync(ticketHistory, cancellationToken);
+            
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return ticket.Id;
@@ -46,6 +61,21 @@ namespace TicketSystem.Repository.Repositories
 
             _dbContext.Update(origin);
 
+            var ticketHistory = new TicketHistory
+            {
+                AsigneeUserId = origin.AsigneeUserId,
+                CreationTime = origin.UpdateTime.Value,
+                CreatorId = origin.UpdateUserId.Value,
+                Description = origin.Description,
+                Priority = origin.Priority,
+                Severity = origin.Severity,
+                Status = origin.Status,
+                Summary = origin.Summary,
+                Type = origin.Type,
+            };
+
+            await _dbContext.TicketHistories.AddAsync(ticketHistory, cancellationToken);
+            
             return await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
