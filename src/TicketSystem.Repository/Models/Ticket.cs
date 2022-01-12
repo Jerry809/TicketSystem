@@ -17,9 +17,9 @@ namespace TicketSystem.Repository.Models
         [StringLength(500)]
         public string Summary { get; set; }
         [Required]
-        [StringLength(500)]
+        [Column(TypeName = "ntext")]
         public string Description { get; set; }
-        public int? Type { get; set; }
+        public int Type { get; set; }
         public int? Severity { get; set; }
         public int? Priority { get; set; }
         public int? AsigneeUserId { get; set; }
