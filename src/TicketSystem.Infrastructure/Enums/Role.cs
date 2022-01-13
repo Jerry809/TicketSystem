@@ -9,5 +9,6 @@ namespace TicketSystem.Infrastructure
         Pm = 2,
         Rd = 4,
         Qa = 8,
+        All = Admin | Pm | Rd | Qa,
     }
 }

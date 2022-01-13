@@ -8,12 +8,16 @@ namespace TicketSystem.Repository.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        Task<int> Create(User user, CancellationToken cancellationToken = default);
+        Task<int> CreateAsync(User user, CancellationToken cancellationToken = default);
 
-        Task<int> Update(User user, CancellationToken cancellationToken = default);
+        Task<int> UpdateAsync(User user, CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<User>> GetUserList(CancellationToken cancellationToken = default);
+        Task<IEnumerable<User>> GetUserListAsync(CancellationToken cancellationToken = default);
 
-        Task<User> GetUser(int id, CancellationToken cancellationToken = default);
+        Task<User> GetUserAsync(int id, CancellationToken cancellationToken = default);
+
+        Task<User> LoginAsync(string account, string password, CancellationToken cancellationToken = default);
+
+        Task<bool> IsExistAccountAsync(string account, CancellationToken cancellationToken = default);
     }
 }

@@ -37,6 +37,13 @@ namespace TicketSystem.Repository.Models
                     .HasConstraintName("Comment_FK");
             });
 
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Property(e => e.Account).IsUnicode(false);
+
+                entity.Property(e => e.Password).IsUnicode(false);
+            });
+
             OnModelCreatingPartial(modelBuilder);
         }
 

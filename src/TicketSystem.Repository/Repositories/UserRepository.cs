@@ -17,7 +17,7 @@ namespace TicketSystem.Repository.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<int> Create(User user, CancellationToken cancellationToken = default)
+        public async Task<int> CreateAsync(User user, CancellationToken cancellationToken = default)
         {
             await _dbContext.Users.AddAsync(user, cancellationToken);
 
@@ -26,7 +26,7 @@ namespace TicketSystem.Repository.Repositories
             return user.Id;
         }
 
-        public async Task<int> Update(User user, CancellationToken cancellationToken = default)
+        public async Task<int> UpdateAsync(User user, CancellationToken cancellationToken = default)
         {
             var origin = _dbContext.Find<User>(user.Id);
 
@@ -41,14 +41,27 @@ namespace TicketSystem.Repository.Repositories
             return await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<User>> GetUserList(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<User>> GetUserListAsync(CancellationToken cancellationToken = default)
         {
             return await _dbContext.Users.AsQueryable().ToListAsync(cancellationToken: cancellationToken);
         }
 
-        public async Task<User> GetUser(int id, CancellationToken cancellationToken = default)
+        public async Task<User> GetUserAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        }
+
+        public async Task<User> LoginAsync(string account, string password, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Users.FirstOrDefaultAsync(x => x.Account == account
+                                                                   && x.Password == password, cancellationToken);
+        }
+
+        public async Task<bool> IsExistAccountAsync(string account, CancellationToken cancellationToken = default)
+        {
+            var result = await _dbContext.Users.FirstOrDefaultAsync(x => x.Account.ToUpper() == account.ToUpper(), cancellationToken);
+
+            return result != null;
         }
     }
 }

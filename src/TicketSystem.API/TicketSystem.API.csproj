@@ -11,13 +11,22 @@
 
   
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="6.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.5" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="9.5.2" />
   </ItemGroup>
 
   
   <ItemGroup>
     <ProjectReference Include="..\TicketSystem.Repository\TicketSystem.Repository.csproj" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <Folder Include="Middlewares" />
   </ItemGroup>
 
 </Project>

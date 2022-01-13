@@ -12,23 +12,37 @@ namespace TicketSystem.API.Services
     {
         private readonly ILogger<CommentService> _logger;
         private readonly ICommentRepository _commentRepository;
+        private readonly ITicketRepository _ticketRepository;
 
-        public CommentService(ILogger<CommentService> logger, ICommentRepository commentRepository)
+        public CommentService(
+            ILogger<CommentService> logger,
+            ICommentRepository commentRepository,
+            ITicketRepository ticketRepository)
         {
             _logger = logger;
             _commentRepository = commentRepository;
+            _ticketRepository = ticketRepository;
         }
 
-        public async Task CreateCommentAsync(Comment comment, CancellationToken cancellationToken = default)
+        public async Task<(bool isOk, string message)> CreateCommentAsync(Comment comment, CancellationToken cancellationToken = default)
         {
             try
             {
+                var ticket = await _ticketRepository.GetTicketAsync(comment.TicketId, cancellationToken);
+
+                if (ticket == null)
+                {
+                    return (false, "ticket is not exist");
+                }
+
                 await _commentRepository.CreateAsync(new Repository.Models.Comment()
                 {
                     Description = comment.Description,
                     CreatorId = comment.CreatorId,
                     TicketId = comment.TicketId
                 }, cancellationToken);
+
+                return (true, string.Empty);
             }
             catch (Exception e)
             {

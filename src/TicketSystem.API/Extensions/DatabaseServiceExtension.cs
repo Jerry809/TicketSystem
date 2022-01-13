@@ -1,13 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using TicketSystem.Repository.Models;
 
 namespace TicketSystem.API.Extensions
 {
     public static class DatabaseServicesExtension
     {
-        // This method to add Database services to service container.
+        private static ILoggerFactory Logger = LoggerFactory.Create(builder => { builder.AddConsole(); });
+
         public static IServiceCollection AddDatabaseServices(this IServiceCollection services, IConfiguration configuration)
         {
             var connection = configuration.GetConnectionString("TicketSystem");
@@ -15,6 +17,7 @@ namespace TicketSystem.API.Extensions
             services.AddDbContext<TicketSystemContext>(options =>
             {
                 options.UseSqlServer(connection);
+                options.UseLoggerFactory(Logger);
             });
             return services;
         }

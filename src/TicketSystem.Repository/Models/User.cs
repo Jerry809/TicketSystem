@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace TicketSystem.Repository.Models
 {
     [Table("User")]
+    [Index(nameof(Account), Name = "User_UN", IsUnique = true)]
     public partial class User
     {
         [Key]
@@ -24,5 +25,11 @@ namespace TicketSystem.Repository.Models
         [Column(TypeName = "datetime")]
         public DateTime? UpdateTime { get; set; }
         public bool IsDisabled { get; set; }
+        [Required]
+        [StringLength(100)]
+        public string Account { get; set; }
+        [Required]
+        [StringLength(64)]
+        public string Password { get; set; }
     }
 }

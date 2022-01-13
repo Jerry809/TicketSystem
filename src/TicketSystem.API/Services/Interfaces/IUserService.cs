@@ -12,5 +12,6 @@ namespace TicketSystem.API.Services.Interfaces
         Task<int> UpdateUserAsync(User user, CancellationToken cancellationToken = default);
         Task<User> GetUserAsync(int userId, CancellationToken cancellationToken = default);
         Task<IEnumerable<User>> GetUsersAsync(CancellationToken cancellationToken = default);
+        Task<(bool isOk, string jwt)> LoginAsync(string account, string password, CancellationToken cancellationToken = default);
     }
 }
