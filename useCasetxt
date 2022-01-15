@@ -1,0 +1,16 @@
+1.Qa開單，不指定工程師，state:new
+2.工程師認領，壓工程師編號，state:active
+3.工程師完工，state:resolved
+4.Qa複驗，沒問題state:closed
+5.Qa複驗，有問題state:active
+6.工程師再resolved
+7.Qa複驗，沒問題closed,有問題回到5
+
+1.pm開feature,state:new
+2.工程師認領，state:active
+3.工程師完工,state:resolved
+4.PM確認, Closed , 通知QA準備TestCase
+
+1.QA 開 TestCase單  State:new
+2.QA認領，State:Active
+3.QA驗證過，state:Resolved , Closed
