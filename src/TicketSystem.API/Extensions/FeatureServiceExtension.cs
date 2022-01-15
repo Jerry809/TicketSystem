@@ -14,8 +14,13 @@ namespace TicketSystem.API.Extensions
     {
         public static IServiceCollection AddFeatureServices(this IServiceCollection services)
         {
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddTransient<IValidator<CommentInsertViewModel>, CommentInsertViewModelValidator>();
+            services.AddTransient<IValidator<LoginViewModel>, LoginViewModelValidator>();
+            services.AddTransient<IValidator<TicketInsertViewModel>, TicketInsertViewModelValidator>();
+            services.AddTransient<IValidator<TicketStatusUpdateViewModel>, TicketStatusUpdateViewModelValidator>();
+            services.AddTransient<IValidator<UserInsertViewModel>, UserInsertViewModelValidator>();
+
+            
             services.AddSingleton<JwtHelper>();
             
             services.AddScoped<ITicketService, TicketService>();

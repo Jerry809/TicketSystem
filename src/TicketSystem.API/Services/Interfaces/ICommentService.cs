@@ -6,6 +6,6 @@ namespace TicketSystem.API.Services.Interfaces
 {
     public interface ICommentService
     {
-        Task<(bool isOk, string message)> CreateCommentAsync(Comment comment, CancellationToken cancellationToken = default);
+        Task<(bool isOk,  int id)> CreateCommentAsync(Comment comment, CancellationToken cancellationToken = default);
     }
 }

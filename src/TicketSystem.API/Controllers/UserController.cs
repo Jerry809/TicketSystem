@@ -1,9 +1,9 @@
-﻿using System.Threading;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TicketSystem.API.Constants;
 using TicketSystem.API.Filters;
 using TicketSystem.API.Services.Interfaces;
 using TicketSystem.API.Services.Models;
@@ -18,16 +18,13 @@ namespace TicketSystem.API.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _userService;
-        private readonly IMapper _mapper;
 
         public UserController(
             ILogger<UserController> logger,
-            IUserService userService,
-            IMapper mapper)
+            IUserService userService)
         {
             _logger = logger;
             _userService = userService;
-            _mapper = mapper;
         }
 
         [HttpPost("Login")]
@@ -36,7 +33,7 @@ namespace TicketSystem.API.Controllers
             var result = await _userService.LoginAsync(request.Account, request.Password, cancellationToken);
 
             if (!result.isOk)
-                return BadRequest("Account or Password Incorrect");
+                return BadRequest(BadRequestConstants.AccountOrPasswordIncorrect);
             
             return Ok(result.jwt);
         }
@@ -45,15 +42,20 @@ namespace TicketSystem.API.Controllers
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] UserInsertViewModel request, CancellationToken cancellationToken = default)
         {
-            var user = _mapper.Map<User>(request);
             int.TryParse(User?.Identity?.Name, out var userId);
 
-            user.CreatorId = userId;
-
-            var result = await _userService.CreateUserAsync(user, cancellationToken);
+            var result = await _userService.CreateUserAsync(new User
+            {
+                Account = request.Account,
+                Password = request.Password,
+                Role = (int)request.Role,
+                Name = request.Name,
+                CreatorId = userId,
+                
+            }, cancellationToken);
 
             if (result == -1)
-                return BadRequest("account is exist");
+                return BadRequest(BadRequestConstants.AccountIsExist);
             
             return Ok(result);
         }

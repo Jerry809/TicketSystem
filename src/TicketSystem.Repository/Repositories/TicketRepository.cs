@@ -61,20 +61,7 @@ namespace TicketSystem.Repository.Repositories
 
             _dbContext.Update(origin);
 
-            var ticketHistory = new TicketHistory
-            {
-                AsigneeUserId = origin.AsigneeUserId,
-                CreationTime = origin.UpdateTime.Value,
-                CreatorId = origin.UpdateUserId.Value,
-                Description = origin.Description,
-                Priority = origin.Priority,
-                Severity = origin.Severity,
-                Status = origin.Status,
-                Summary = origin.Summary,
-                Type = origin.Type,
-            };
-
-            await _dbContext.TicketHistories.AddAsync(ticketHistory, cancellationToken);
+            await CreateHistory(origin, cancellationToken);
 
             return await _dbContext.SaveChangesAsync(cancellationToken);
         }
@@ -97,7 +84,7 @@ namespace TicketSystem.Repository.Repositories
             {
                 predicate = predicate.And(x => x.AsigneeUserId == filter.AsigneeUserId.Value);
             }
-            
+
             var ticketQueryable = _dbContext.Tickets.Where(predicate).OrderByDescending(x => x.CreationTime);
 
             var orderByColumn = typeof(Ticket).GetProperties()
@@ -115,15 +102,93 @@ namespace TicketSystem.Repository.Repositories
             }
 
             return await ticketQueryable
-                .Include(x => x.Comment)
+                .Where(x => !x.IsDeleted)
+                .Include(x => x.Comments)
                 .ToListAsync(cancellationToken: cancellationToken);
         }
 
         public async Task<Ticket> GetTicketAsync(int ticketId, CancellationToken cancellationToken = default)
         {
             return await _dbContext.Tickets
-                .Include(x => x.Comment)
-                .FirstOrDefaultAsync(x => x.Id == ticketId, cancellationToken);
+                .Include(x => x.Comments)
+                .FirstOrDefaultAsync(x => x.Id == ticketId && !x.IsDeleted, cancellationToken);
+        }
+
+        public async Task UpdateStatusAsync(int id, int status, int updateUserId, CancellationToken cancellationToken = default)
+        {
+            var origin = _dbContext.Find<Ticket>(id);
+            origin.Status = status;
+            origin.UpdateUserId = updateUserId;
+            origin.UpdateTime = DateTime.Now;
+
+            _dbContext.Tickets.Update(origin);
+
+            await CreateHistory(origin, cancellationToken);
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task UpdateAsigneeAsync(int id, int asigneeUserId, int updateUserId, CancellationToken cancellationToken = default)
+        {
+            var origin = _dbContext.Find<Ticket>(id);
+            origin.AsigneeUserId = asigneeUserId;
+            origin.UpdateUserId = updateUserId;
+            origin.UpdateTime = DateTime.Now;
+
+            _dbContext.Tickets.Update(origin);
+
+            await CreateHistory(origin, cancellationToken);
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task UpdateStatusAndAsigneeAsync(int id, int status, int asigneeUserId, int updateUserId,
+            CancellationToken cancellationToken = default)
+        {
+            var origin = _dbContext.Find<Ticket>(id);
+            origin.AsigneeUserId = asigneeUserId;
+            origin.Status = status;
+            origin.UpdateUserId = updateUserId;
+            origin.UpdateTime = DateTime.Now;
+
+            _dbContext.Tickets.Update(origin);
+
+            await CreateHistory(origin, cancellationToken);
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<int> DeleteAsync(int id, int updateId, CancellationToken cancellationToken = default)
+        {
+            var ticket = _dbContext.Find<Ticket>(id);
+            ticket.IsDeleted = true;
+            ticket.UpdateUserId = updateId;
+            ticket.UpdateTime = DateTime.Now;
+
+            await CreateHistory(ticket, cancellationToken);
+
+            _dbContext.Tickets.Update(ticket);
+
+            return await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        private async Task CreateHistory(Ticket origin, CancellationToken cancellationToken = default)
+        {
+            var ticketHistory = new TicketHistory
+            {
+                AsigneeUserId = origin.AsigneeUserId,
+                CreationTime = origin.UpdateTime.Value,
+                CreatorId = origin.UpdateUserId.Value,
+                Description = origin.Description,
+                Priority = origin.Priority,
+                Severity = origin.Severity,
+                Status = origin.Status,
+                Summary = origin.Summary,
+                Type = origin.Type,
+                IsDeleted = origin.IsDeleted
+            };
+
+            await _dbContext.TicketHistories.AddAsync(ticketHistory, cancellationToken);
         }
     }
 }

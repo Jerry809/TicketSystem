@@ -28,11 +28,9 @@ namespace TicketSystem.Repository.Models
 
             modelBuilder.Entity<Comment>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-                entity.HasOne(d => d.IdNavigation)
-                    .WithOne(p => p.Comment)
-                    .HasForeignKey<Comment>(d => d.Id)
+                entity.HasOne(d => d.Ticket)
+                    .WithMany(p => p.Comments)
+                    .HasForeignKey(d => d.TicketId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Comment_FK");
             });

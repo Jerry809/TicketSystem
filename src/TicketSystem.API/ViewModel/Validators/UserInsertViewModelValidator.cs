@@ -9,7 +9,7 @@ namespace TicketSystem.API.ViewModel.Validators
             RuleFor(x => x.Account).NotEmpty().WithMessage("Account is empty");
             RuleFor(x => x.Password).NotEmpty().WithMessage("Password is empty");
             RuleFor(x => x.Name).NotEmpty().WithMessage("Name is empty");
-            RuleFor(x => x.Role).GreaterThan(0).WithMessage("Role is not selected");
+            RuleFor(x => x.Role).NotNull().IsInEnum().WithMessage("Role is not selected");
         }
     }
 }

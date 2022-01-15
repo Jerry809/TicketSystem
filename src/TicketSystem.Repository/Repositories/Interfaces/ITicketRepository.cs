@@ -16,5 +16,13 @@ namespace TicketSystem.Repository.Repositories.Interfaces
         Task<IEnumerable<Ticket>> GetTicketListAsync(GetTicketListFilter filter, CancellationToken cancellationToken = default);
 
         Task<Ticket> GetTicketAsync(int ticketId, CancellationToken cancellationToken = default);
+
+        Task UpdateStatusAsync(int id, int status, int updateUserId, CancellationToken cancellationToken = default);
+
+        Task UpdateAsigneeAsync(int id, int asigneeUserId, int updateUserId, CancellationToken cancellationToken = default);
+
+        Task UpdateStatusAndAsigneeAsync(int id, int status, int asigneeUserId, int updateUserId, CancellationToken cancellationToken = default);
+
+        Task<int> DeleteAsync(int id, int updateId, CancellationToken cancellationToken = default);
     }
 }

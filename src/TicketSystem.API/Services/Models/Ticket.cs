@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using TicketSystem.Infrastructure;
 
 namespace TicketSystem.API.Services.Models
@@ -17,5 +19,6 @@ namespace TicketSystem.API.Services.Models
         public DateTime CreationTime { get; set; }
         public int? UpdateId { get; set; }
         public DateTime? UpdateTime { get; set; }
+        public IEnumerable<Comment> Comments { get; set; }
     }
 }

@@ -21,8 +21,8 @@ namespace TicketSystem.Repository.Models
         public DateTime CreationTime { get; set; }
         public int TicketId { get; set; }
 
-        [ForeignKey(nameof(Id))]
-        [InverseProperty(nameof(Ticket.Comment))]
-        public virtual Ticket IdNavigation { get; set; }
+        [ForeignKey(nameof(TicketId))]
+        [InverseProperty("Comments")]
+        public virtual Ticket Ticket { get; set; }
     }
 }

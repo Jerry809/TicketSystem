@@ -11,6 +11,11 @@ namespace TicketSystem.Repository.Models
     [Table("Ticket")]
     public partial class Ticket
     {
+        public Ticket()
+        {
+            Comments = new HashSet<Comment>();
+        }
+
         [Key]
         public int Id { get; set; }
         [Required]
@@ -30,8 +35,9 @@ namespace TicketSystem.Repository.Models
         public int? UpdateUserId { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? UpdateTime { get; set; }
+        public bool IsDeleted { get; set; }
 
-        [InverseProperty("IdNavigation")]
-        public virtual Comment Comment { get; set; }
+        [InverseProperty(nameof(Comment.Ticket))]
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

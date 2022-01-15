@@ -1,6 +1,6 @@
 namespace TicketSystem.Infrastructure
 {
-    public enum Severity
+    public enum TicketSeverity
     {
         Low = 1,
         Normal = 2,

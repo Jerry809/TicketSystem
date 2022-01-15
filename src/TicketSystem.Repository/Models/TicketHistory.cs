@@ -27,5 +27,6 @@ namespace TicketSystem.Repository.Models
         public int CreatorId { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime CreationTime { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

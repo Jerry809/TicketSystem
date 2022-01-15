@@ -7,6 +7,9 @@ namespace TicketSystem.API.ViewModel
     /// </summary>
     public class CommentViewModel
     {
+        /// <summary>
+        /// id
+        /// </summary>
         public int Id { get; set; }
         
         /// <summary>

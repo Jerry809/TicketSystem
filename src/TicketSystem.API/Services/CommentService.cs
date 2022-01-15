@@ -24,7 +24,7 @@ namespace TicketSystem.API.Services
             _ticketRepository = ticketRepository;
         }
 
-        public async Task<(bool isOk, string message)> CreateCommentAsync(Comment comment, CancellationToken cancellationToken = default)
+        public async Task<(bool isOk, int id)> CreateCommentAsync(Comment comment, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -32,17 +32,18 @@ namespace TicketSystem.API.Services
 
                 if (ticket == null)
                 {
-                    return (false, "ticket is not exist");
+                    return (false, -1);
                 }
 
-                await _commentRepository.CreateAsync(new Repository.Models.Comment()
+                var result = await _commentRepository.CreateAsync(new Repository.Models.Comment()
                 {
                     Description = comment.Description,
                     CreatorId = comment.CreatorId,
+                    CreationTime = DateTime.Now,
                     TicketId = comment.TicketId
                 }, cancellationToken);
 
-                return (true, string.Empty);
+                return (true, result);
             }
             catch (Exception e)
             {
